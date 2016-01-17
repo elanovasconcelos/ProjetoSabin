@@ -1,6 +1,8 @@
 package com.elano.projetosabin;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Handler;
@@ -17,6 +19,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.google.zxing.client.android.CaptureActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_achar:
                 discover();
                 return true;
+            case R.id.action_scan:
+                scan();
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -88,6 +95,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void discover() {
         focusOnView(horizontalScrollView, findViewById(R.id.imageButton));
+    }
+
+    public void scan() {
+        Intent it = new Intent(MainActivity.this, CaptureActivity.class);
+        startActivityForResult(it, 0);
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("TESTANDO", ">>> " + requestCode + " -- " + resultCode);
+        Log.d("TESTANDO", ">>> " + data.getDataString());
+
+        if (requestCode == 0 && RESULT_OK == resultCode) {
+            Log.d("RESULTADO", ">>> " + data.getStringExtra("SCAN_RESULT") + " -- " +
+            data.getStringExtra("SCAN_FORMAT"));
+        }
     }
 
     private void addPoints(int a_x, int a_y) {
